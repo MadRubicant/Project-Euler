@@ -1,11 +1,17 @@
-#include <iostream>
-#include <cstring>
-#include <string>
-#include <vector>
+#include <array>
 #include <list>
 #include <set>
-#include <cmath>
+#include <map>
 #include <ctime>
+#include <cstring>
+#include <fstream>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <cmath>
+#include <algorithm>
+
+#include "latticepath.cpp"
 using std::cout;
 using std::endl;
 using std::string;
@@ -15,21 +21,58 @@ int fibonacci(int);
 // Finds the sum of all fibonacci numbers lower than int
 
 long long largest_prime_factor(long long int);
+// Finds the largest prime factor of a number
+
 int palindromic_number();
+// Finds a number that's also a palindrome that's the product of two 3 digit numbers
+
 long long least_common_multiple(int);
 // Finds the least common multiple of the range 1, int
 
 std::vector<int> prime_range(int);
-// Finds all primes ranging from 2 to int
+// Finds all primes ranging from 2 to int, sorted from least to greatest
 
+std::vector<int> prime_sieve(int);
 int nth_prime(int);
 // Finds prime n
 
 int square_sum(int);
+// Finds the difference between the sum of the squares and the square of the sum of (1, int)
 
 long long int largest_series_product(int);
+// Finds the largest product of adjacent digits in a 1000 digit number
 
 int pythagorean_triplet();
+// Finds the product of the pythagorean triplet whose sum = 1000
+
+long long prime_sum(int);
+// Finds the sum of all primes less than int
+
+int number_grid();
+// Finds the greatest product of 4 numbers in a grid
+
+int triangle_numbers(int);
+// Finds the triangle number with a number of factors greater than int
+
+unsigned long long large_sum();
+
+int longest_collatz(int);
+
+int lattice_paths(int);
+
+int power_digit_sum();
+
+int number_letter_counts(int);
+
+int max_path_sum1();
+
+int counting_sundays();
+
+int amicable_numbers(int);
+
+long long names_score();
+
+int nonabundent_sums();
 
 int main(int argc, char* argv[]) {
 	switch (argc) {
@@ -49,6 +92,33 @@ int main(int argc, char* argv[]) {
 		else if (!(strcmp(argv[1], "--pythagorean_triplet"))) {
 			cout << pythagorean_triplet() << endl;
 		}
+		else if (!strcmp(argv[1], "--grid_product")) {
+			cout << number_grid() << endl;
+		}
+		else if (!strcmp(argv[1], "--large_sum")) {
+			large_sum();
+		}
+		else if (!strcmp(argv[1], "--power_digit_sum"))
+			power_digit_sum();
+
+		else if (!strcmp(argv[1], "--number_letter_counts")){
+			cout << number_letter_counts(1000) << endl;
+		}
+		else if (!strcmp(argv[1], "--max_path_sum_one")) {
+			cout << max_path_sum1() << endl;
+		}
+		else if (!strcmp(argv[1], "--counting_sundays")) {
+			cout << counting_sundays() << endl;
+		}
+		else if (!strcmp(argv[1], "--factorial_sum")) {
+			system("python factorial_digits.py");
+		}
+		else if (!strcmp(argv[1], "--names_score")) {
+			cout << names_score() << endl;
+		}
+		else if (!strcmp(argv[1], "--nonabundent_sums")) {
+			cout << nonabundent_sums() << endl;
+		}
 		break;
 	case 3:
 		if (!strcmp(argv[1], "--multiples")) {
@@ -64,7 +134,7 @@ int main(int argc, char* argv[]) {
 			cout << least_common_multiple(stoi(string(argv[2]))) << endl;
 		}
 		else if (!strcmp(argv[1], "--primes")) {			
-			std::vector<int> i = prime_range(stoi(string(argv[2])));
+			std::vector<int> i = prime_sieve(stoi(string(argv[2])));
 			int newline = 0;
 			for (auto it : i) {
 				cout << it << ", ";
@@ -82,6 +152,21 @@ int main(int argc, char* argv[]) {
 		}
 		else if (!strcmp(argv[1], "--largest_series_product")) {
 			cout << largest_series_product(stoi(string(argv[2]))) << endl;
+		}
+		else if (!strcmp(argv[1], "--prime_sum")) {
+			cout << prime_sum(stoi(string(argv[2]))) << endl;
+		}
+		else if (!strcmp(argv[1], "--triangle_numbers")) {
+			cout << triangle_numbers(stoi(string(argv[2]))) << endl;
+		}
+		else if (!strcmp(argv[1], "--longest_collatz")) {
+			cout << longest_collatz(stoi(string(argv[2]))) << endl;
+		}
+		else if (!strcmp(argv[1], "--lattice_paths")) {
+			cout << lattice_paths(stoi(string(argv[2]))) << endl;
+		}
+		else if (!strcmp(argv[1], "--amicable_numbers")) {
+			cout << amicable_numbers(stoi(string(argv[2]))) << endl;
 		}
 		break;
 	}
@@ -130,7 +215,7 @@ long long largest_prime_factor(long long int number) {
 			if (working_number % i == 0) {
 				factor_list.push_back(i);
 				working_number /= i;
-				i = 2;
+				i = 1;
 			}
 		}
 		factor_list.push_back(working_number);
@@ -216,19 +301,43 @@ std::vector<int> prime_range(int range) {
 				break;
 			}
 		}
-		if (prime) {
+		/*if (prime) {
 			for (int j = prime_array.back(); j < i / 2; j++) {
 				if (i % j == 0) { // If it divides even, into the trash it goes
 					prime = false;
 					break;
 				}
 			}
-		}
+		}*/
 
 		if (prime)
 			prime_array.push_back(i);
 	}
 	return prime_array;
+}
+
+std::vector<int> prime_sieve(int range) {
+	std::set<int> primes;
+	//std::list<int> return_list;
+	std::vector<int> return_vec;
+	int p = 3;
+	primes.insert(2);
+	for (int i = 3; i < range; i += 2){
+		primes.insert(i);
+	}
+	while (p * p < range) {
+		int mult = p;
+		while (mult < range) {
+			mult += p;
+			primes.erase(mult);
+		}
+		p = *primes.lower_bound(p + 1);
+		cout << p << endl;
+	}
+	for (auto x : primes) {
+		return_vec.push_back(x);
+	}
+	return return_vec;
 }
 
 long long least_common_multiple(int range) {
@@ -250,7 +359,7 @@ long long least_common_multiple(int range) {
 			}
 		}
 	}
-	cout << primes_product << endl;
+	//cout << primes_product << endl;
 	cout << lcm << endl;
 	return 0;
 }
@@ -261,7 +370,7 @@ int square_sum(int range) {
 		num_sum += pow(i, 2);
 		sqr_sum += i;
 	}
-	cout << num_sum << ", " << sqr_sum << endl;
+	//cout << num_sum << ", " << sqr_sum << endl;
 	sqr_sum *= sqr_sum;
 	return (sqr_sum - num_sum);
 }
@@ -335,15 +444,604 @@ long long int largest_series_product(int num_digits) { // Look at this. What the
 }
 
 int pythagorean_triplet() {
-	int a, b, c = 998;
+	int a, b = 1, c = 998;
 	while (c >= 1) {
-		b = 999 - c;
 		a = 1000 - b - c;
-
-		if (a + b + c != 1000)
-			cout << "YOu dun fucked up" << endl;
+		if ((int) pow(a, 2) + (int) pow(b, 2) == (int) pow(c, 2)) {
+			return (a * b * c);
+		}
 		c--;
+		if (c == 1) {
+			b++;
+			c = 998 - b;
+		}
 	}
 
 	return 0;
+}
+
+long long prime_sum(int max) {
+	auto vec = prime_sieve(max);
+	long long sum = 0, i = 0;
+	for (int x : vec) {
+		i++;
+		sum += x;
+	}
+	cout << i << endl;
+	return sum;
+}
+
+int number_grid() {
+	std::array<std::array<int, 20>, 20> grid;
+	std::ifstream file;
+	string line;
+	file.open("numbers.txt");
+	int p = 0;
+	// Parse the grid and put it in a 2d array
+	while (std::getline(file, line)) {
+		int i = 0;
+		string str;
+		for (char c : line) {
+			if (c == ' ') {
+				grid[p][i] = stoi(str);
+				str.clear();
+				i++;
+			}
+			else {
+				str.push_back(c);
+			}
+		}
+		p++;
+	}
+	int number = 1;
+	int highest = 0;
+	for (int x = 0; x < 17; x++) {
+		for (int y = 0; y < 17; y++) {
+			int count = 0;
+
+			// Try going right first
+			while (count < 4) {
+				number *= grid[x][y + count];
+				count++;
+			}
+			if (number > highest)
+				highest = number;
+			number = 1;
+			count = 0;
+
+			// Next try going down
+			while (count < 4) {
+				number *= grid[x + count][y];
+				count++;
+			}
+			if (number > highest)
+				highest = number;
+			number = 1;
+			count = 0;
+
+			// Diagonal right
+			while (count < 4) {
+				number *= grid[x + count][y + count];
+				count++;
+			}
+			if (number > highest)
+				highest = number;
+			number = 1;
+			count = 0;
+			if (y > 3) {
+				for (y; y < 20; y++) {
+					// Diagonal left, this is sort of tacked on
+					while (count < 4) {
+						number *= grid[x + count][y - count];
+						count++;
+					}
+					if (number > highest)
+						highest = number;
+					number = 1;
+					count = 0;
+				}
+			}
+		}
+	}
+	//for (auto x : grid) {
+	//	for (auto y : x) {
+	//		cout << y << " ";
+	//	}
+	//	cout << endl;
+	//}
+	file.close();	
+	return highest;
+}
+
+int triangle_numbers(int total_factors) {
+	std::list<int> factors;
+	bool found = false;
+	int it = 0, total = 0;
+	while (!found) {
+		// Find the factors of the current number
+		total += it;
+		it++;
+		//cout << total << endl;
+		for (int i = 1; i <= total / 2; i++) {
+			if (total % i == 0) {
+				factors.push_back(i);
+			}
+		}
+		if (factors.size() >= total_factors)
+			return total;
+
+		factors.clear();
+	}
+}
+
+unsigned long long large_sum() {
+	/*std::fstream file;
+	std::array<string, 50> numbers;
+	file.open("50 digit numbers.txt");
+	for (int num = 0; num < 50; num++) {
+		std::getline(file, numbers[num]);
+	}
+	int total_offset = 37;
+	unsigned long long rough_total;	
+	for (auto str : numbers) {
+		unsigned long long operand = std::stoull(string(str.substr(0, 10)));
+	}
+	return 0;*/
+	string script_command = "python large_sum.py";
+	system(script_command.c_str());
+	return 0;
+}
+
+int longest_collatz(int range) {
+	int count = 0, longest_count = 0, longest_number = 0;
+	std::vector<int> cache = {0};
+	long long num;
+	for (int i = 2; i < range; i++) {
+		num = i;
+		count = 0;
+		while (num != 1 && num >= i) {
+			if (num % 2 == 0)
+				num /= 2;
+			else
+				num = num * 3 + 1;
+
+			count++;
+			}
+		count += cache.at(num - 1);
+		num = 1;
+		cache.push_back(count);
+		if (count > longest_count) {
+			longest_number = i;
+			longest_count = count;
+		}
+	}
+	return longest_number;
+}
+
+int lattice_paths(int dimensions) {
+	vector<vector<bool>> paths;
+	// Paths are stored as an array of bools. False means move right, True means move down.
+	vector<bool> cur_path, last_path;
+	for (int i = 0; i < dimensions * 2; i++)
+		cur_path.push_back(false);
+	paths.push_back(cur_path);
+	last_path = cur_path;
+	cur_path.clear();
+	bool finished = false;
+	while (!finished) {
+		int pos = 0; // We're at node 0
+		int movsum = 0;
+		while (pos < dimensions * 2) {
+			bool direction = 0;
+			if (last_path.at(pos) == direction)
+				direction = 1;
+			movsum += direction;
+			cur_path.push_back(direction);
+			cout << "Pos: " << pos << "\n" << "Direction: " << direction << endl;
+			if (pos == dimensions && movsum == dimensions) {
+				finished = true;
+			}
+			pos++;
+		}
+		paths.push_back(cur_path);
+		last_path = cur_path;
+		cur_path.clear();
+	}
+	return paths.size();
+}
+
+int power_digit_sum() {
+	system("python digit_sum.py");
+	return 1;
+}
+
+string digit_word(int digit) {
+	switch (digit) {
+	case 0:
+		return "";
+		break;
+	case 1:
+		return "one";
+		break;
+	case 2:
+		return "two";
+		break;
+	case 3:
+		return "three";
+		break;
+	case 4:
+		return "four";
+		break;
+	case 5:
+		return "five";
+		break;
+	case 6:
+		return "six";
+		break;
+	case 7:
+		return "seven";
+		break;
+	case 8:
+		return "eight";
+		break;
+	case 9:
+		return "nine";
+		break;
+	}
+}
+
+int get_digit(int number, int digit) {
+	return static_cast<int>(number / pow(10, digit - 1)) % 10;
+}
+
+string get_word(int num) {
+	string phrase = "";
+	if (num == 1000) {
+		phrase.append("onethousand");
+		return phrase;
+		}
+	if (num > 99 && num < 1000) {
+		auto var = digit_word(get_digit(num, 3));
+		phrase.append(var);//digit_word(get_digit(num, 3)));
+		phrase.append("hundred");
+		if (!(get_digit(num, 2) == 0 && get_digit(num, 1) == 0))
+			phrase.append("and");
+	}
+	if (num > 0) {
+		auto var = get_digit(num, 2);
+		auto varb = get_digit(num, 1);
+		switch (var){//get_digit(num, 2)) {
+		case 0:
+			phrase.append(digit_word(varb));
+			break;
+		case 1:
+			switch (varb) {//get_digit(num, 1)) {
+			case 0:
+				phrase.append("ten");
+				break;
+			case 1:
+				phrase.append("eleven");
+				break;
+			case 2:
+				phrase.append("twelve");
+				break;
+			case 3:
+				phrase.append("thirteen");
+				break;
+			case 4:
+				phrase.append("fourteen");
+				break;
+			case 5:
+				phrase.append("fifteen");
+				break;
+			case 6:
+				phrase.append("sixteen");
+				break;
+			case 7:
+				phrase.append("seventeen");
+				break;
+			case 8:
+				phrase.append("eighteen");
+				break;
+			case 9:
+				phrase.append("nineteen");
+				break;
+			}
+			break;
+		case 2:
+			phrase.append("twenty");
+			phrase.append(digit_word(get_digit(num, 1)));
+			break;
+		case 3:
+			phrase.append("thirty");
+			phrase.append(digit_word(get_digit(num, 1)));
+			break;
+		case 4:
+			phrase.append("forty");
+			phrase.append(digit_word(get_digit(num, 1)));
+			break;
+		case 5:
+			phrase.append("fifty");
+			phrase.append(digit_word(get_digit(num, 1)));
+			break;
+		case 6:
+			phrase.append("sixty");
+			phrase.append(digit_word(get_digit(num, 1)));
+			break;
+		case 7:
+			phrase.append("seventy");
+			phrase.append(digit_word(get_digit(num, 1)));
+			break;
+		case 8:
+			phrase.append("eighty");
+			phrase.append(digit_word(get_digit(num, 1)));
+			break;
+		case 9:
+			phrase.append("ninety");
+			phrase.append(digit_word(get_digit(num, 1)));
+			break;
+		}
+	}
+	/*if (num > 0 && num < 10) {
+		phrase.append(digit_word(num));
+	}*/
+	if (num == 0) {
+		phrase.append("zero");
+	}
+	return phrase;
+}
+
+int number_letter_counts(int range) {
+	string fnl = "";
+	for (int i = 1000; i > 0; i--) {
+		cout << i << " " << get_word(i) << endl;
+		fnl.append(get_word(i));
+	}
+	int count = 0;
+	for (char c : fnl) {
+		if (c >= 'a' && c <= 'z')
+			count++;
+	}
+	//cout << fnl;
+	return fnl.size();
+}
+
+int max_path_sum1() {
+	std::fstream file;
+	string line, num = "";
+	int x = 0;
+	std::vector < std::vector<int> > triangle, sums;
+	file.open("triangle.txt");
+	char c;
+	std::vector<int> tri_line = {}, sum_line = {};
+	while (file.get(c)){
+		if (c == '\n') {
+			//cout << num;
+			tri_line.push_back(stoi(num));
+			sum_line.push_back(0);
+			triangle.push_back(tri_line);
+			sums.push_back(sum_line);
+			num = "";
+			tri_line.clear();
+			sum_line.clear();
+		}
+		else if (c == ' ') {
+			//cout << num;
+			tri_line.push_back(stoi(num));
+			sum_line.push_back(0);
+			num = "";
+		}
+		else{
+			num.append(1, c);
+		}
+	}
+	tri_line.push_back(stoi(num));
+	sum_line.push_back(0);
+	triangle.push_back(tri_line);
+	sums.push_back(sum_line);
+	/*while (std::getline(file, line)) {
+		triangle.push_back({});
+		sums.push_back({});
+		for (char c : line){
+			cout << c;
+			if (c == ' ' || c == '\n') {
+				triangle.at(x).push_back(stoi(num));
+				sums.at(x).push_back(0);
+				num = "";
+			}
+			else
+				num.append(1, c);
+		}
+		cout << endl;
+			x++;
+	}*/
+	sum_line.push_back(0);
+	sums.push_back(sum_line);
+	/*for (auto x : triangle) {
+		for (auto y : x) {
+			cout << y << " ";
+		}
+		cout << endl;
+	}
+	for (auto x : sums) {
+		for (auto y : x) {
+			cout << y << " ";
+		}
+		cout << endl;
+	}*/
+	auto it = triangle.rbegin(), it_sum = sums.rbegin(), it_sum_up = sums.rbegin();
+	it_sum_up++;
+	while (it != triangle.rend()) {
+		auto it_b = it->begin(), it_sum_b = it_sum->begin(), it_sum_up_b = it_sum_up->begin();
+		while (it_b != it->end()) {
+			//cout << *it_b << " ";
+			int sum = std::max(*it_b + *(it_sum_b), *it_b + it_sum_b[1]);
+			it_sum_up_b[0] = sum;
+			//cout << *it_b + *(it_sum_b) << ", " << *it_b + it_sum_b[1] << "; ";
+			it_b++;
+			it_sum_b++;
+			it_sum_up_b++;
+		}
+		//cout << endl;
+		it++;
+		it_sum++;
+		it_sum_up++;
+	}
+	
+	return sums.front().front();
+}
+
+int counting_sundays() {
+	int weekday = 2;
+	int month = 1;
+	int year = 1901;
+	int sundays = 0;
+	while (year <= 2000) {
+		switch (month) {
+		case 1:
+		case 3:
+		case 5:
+		case 7:
+		case 8:
+		case 10:
+		case 12:
+			weekday += 31;
+			break;
+		case 4:
+		case 6:
+		case 9:
+		case 11:
+			weekday += 30;
+			break;
+		case 2:
+			if (year % 4 == 0) { // Leap year
+				weekday += 29;
+			}
+			else
+				weekday += 28;
+			break;
+		}
+		if (weekday % 7 == 0) {
+			sundays++;
+		}
+		month++;
+		if (month > 12) {
+			year++;
+			month = 1;
+		}
+	}
+	return sundays;
+}
+
+int d(int n, vector<int> &sums) {
+	if (n > sums.size())
+		return 0;
+	else
+		return sums.at(n);
+}
+
+int amicable_numbers(int range) {
+	std::vector<std::vector<int>> factors;
+	std::vector<int> sums;
+	std::vector<int> short_list = {};
+	factors.push_back({ 0 });
+	factors.push_back({ 1 });
+	factors.push_back({ 2, 1 });
+	int it = 3;
+	for (it; it < range; it++) {
+		for (int div = static_cast<int>(it / 2); div > 0; div--) {
+			if (it % div == 0) {
+				short_list.push_back(div);
+			}
+		}
+		factors.push_back(short_list);
+		short_list.clear();
+	}
+	for (auto x : factors) {
+		int sum = 0;
+		for (auto y : x) {
+			sum += y;
+		}
+		sums.push_back(sum);
+		//cout << endl;
+	}
+	int sum = 0;
+	int x = 0;
+	for (x; x < sums.size(); x++) {
+		for (int y = 0; y < sums.size(); y++) {
+			if (d(y, sums) == 1)
+				continue;
+			else if (d(y, sums) == d(x, sums) && y != x) {
+				sum += x;
+				break;
+			}
+		}
+	}
+	return sum;
+}
+
+long long names_score() {
+	std::fstream file;
+	string name;
+	std::list<string> all_names;
+	file.open("names.txt");
+	while (!file.eof()) {
+		char c = file.get();
+		if (c == ',') {
+			all_names.push_back(name);
+			name.clear();
+			// We've got a full name, add the character to our list
+		}
+		else if (c == '"') {
+			// Discard this character
+		}
+		else {
+			name += c;
+			// Continue building our name
+		}
+	}
+	name.erase(name.length() - 1);
+	all_names.push_back(name);
+	all_names.sort();
+	long long total_sum = 0, it = 1;
+	for (string name : all_names) {
+		long long sum = 0;
+		for (char c : name) {
+			sum += c - 'A' + 1;
+		}
+		sum *= it++;
+		cout << it << " " << name << ": " << sum << endl;
+		total_sum += sum;
+	}
+	return total_sum;
+}
+
+int nonabundent_sums() {
+	vector<int> sums;
+	vector<bool> abundancy;
+	sums.push_back(0);
+	abundancy.push_back(0);
+	for (int i = 1; i <= 28123; i++) {
+		abundancy.push_back(false);
+		int sum = 1;
+		for (int j = 2; j <= i / 2; j++) {
+			if (i % j == 0) // If it perfectly divides
+				sum += j;
+		}
+		sums.push_back(sum);
+	}
+	for (int i : sums) {
+		for (int j : sums) {
+			if (i + j < 28123 && sums.at(i) == i && sums.at(j) == j){
+				abundancy.at(i + j) = true;
+				break;
+			}
+		}
+	}
+	int fin_sum = 0;
+	for (int i = 0; i < abundancy.size(); i++){
+		if (!abundancy.at(i))
+			fin_sum += i;
+	}
+	return fin_sum;
 }
