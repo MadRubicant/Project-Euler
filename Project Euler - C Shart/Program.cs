@@ -9,7 +9,6 @@ namespace Project_Euler___C_Sharp {
     class Program {
         static void Main(string[] args) {
             DateTime t = DateTime.Now;
-            List<int> foo = new List<int>();
             switch (args.Length) {
                 case 0:
                     Console.WriteLine("Bad input; no arguments");
@@ -26,6 +25,15 @@ namespace Project_Euler___C_Sharp {
 
                     else if (args[0] == "--digit-fifth-powers") {
                         Console.WriteLine(DigitFifthSums.FifthSums());
+                    }
+                    else if (args[0] == "--truncable-primes") {
+                        Console.WriteLine(TruncablePrimes.primes());
+                    }
+                    else if (args[0] == "--champ-constant") {
+                        Console.WriteLine(ChampernownesConstant.Product());
+                    }
+                    else if (args[0] == "--coded-triangle-numbers") {
+                        Console.WriteLine(TriangleNumbers.CodedTriangles());
                     }
                     break;
 
@@ -45,6 +53,18 @@ namespace Project_Euler___C_Sharp {
                     }
                     else if (args[0] == "--circular-primes") {
                         Console.WriteLine(CircularPrimes.Circulars(int.Parse(args[1])));
+                    }
+                    else if (args[0] == "--double-base-palindromes") {
+                        Console.WriteLine(DoubleBasePalindrome.PalindromeSum(int.Parse(args[1])));
+                    }
+                    else if (args[0] == "--minimum-subseq-product") {
+                        int[] Sequence = RandomSequence.RandomList(int.Parse(args[1]));
+                        Console.Write("Array generated: ");
+                        foreach (int i in Sequence)
+                            Console.Write("{0}, ", i);
+                        Console.WriteLine();
+                        Console.WriteLine(Subsequence.MinimumSubSequenceProductNaive(Sequence));
+                        Console.WriteLine(Subsequence.MinimumSubsequenceProduct(Sequence));
                     }
                     /*else if (args[0] == "--coin-sums") {
                         Console.WriteLine(CoinSums.Sums(int.Parse(args[1])));

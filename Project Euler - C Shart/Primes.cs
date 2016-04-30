@@ -37,6 +37,7 @@ namespace Project_Euler___C_Sharp {
                 Primes = Primes.Except<int>(Composites).ToList<int>();
                 Composites.Clear();
                 prime = Primes.Where<int>(x => x > prime).Min();
+                GC.Collect(1);
             }
             return Primes.ToArray();
         }

@@ -44,16 +44,19 @@
   <ItemGroup>
     <Compile Include="1kDigitFib.cs" />
     <Compile Include="Amicable Numbers.cs" />
+    <Compile Include="ChampernownesConstant.cs" />
     <Compile Include="CircularPrimes.cs" />
     <Compile Include="CoinSums.cs" />
     <Compile Include="DigitCancellingFractions.cs" />
     <Compile Include="DigitFactorials.cs" />
     <Compile Include="DigitFifthSums.cs" />
     <Compile Include="Distinct Powers.cs" />
+    <Compile Include="DoubleBasePalindrome.cs" />
     <Compile Include="LatticePaths.cs" />
     <Compile Include="lexicographicPermutation.cs" />
     <Compile Include="Non-abundant sums.cs" />
     <Compile Include="NumberSpirals.cs" />
+    <Compile Include="PentagonNumbers.cs" />
     <Compile Include="Primes.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -62,7 +65,11 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="RandomSequence.cs" />
     <Compile Include="ReciprocalCycles.cs" />
+    <Compile Include="Subsequence.cs" />
+    <Compile Include="TriangleNumbers.cs" />
+    <Compile Include="TruncablePrimes.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -70,6 +77,10 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="p042_words.txt" />
+    <Content Include="problem42.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
